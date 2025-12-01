@@ -18,19 +18,19 @@ public class PlayerInput : MonoBehaviour
         {
             print("Ik heb W ingedrukt.");
             Vector3 position = new Vector3(0, 0, 0);
-            transform.position += (new Vector3(0, 1, -1) * Time.deltaTime * _speed);
+            transform.position += (new Vector3(0, 1, 0) * Time.deltaTime * _speed);
         }
         else if (Input.GetKey(KeyCode.A))
         {
             print("Ik heb A ingedrukt");
             Vector3 position = new Vector3(0, 0, 0);
-            transform.position += (new Vector3(-1, 0, -1) * Time.deltaTime * _speed);
+            transform.position += (new Vector3(-1, 0, 0) * Time.deltaTime * _speed);
         }
         else if (Input.GetKey(KeyCode.D))
         {
             print("Ik heb D ingedrukt.");
             Vector3 position = new Vector3(0, 0, 0);
-            transform.position += (new Vector3(1, 0, -1) * Time.deltaTime * _speed);
+            transform.position += (new Vector3(1, 0, 0) * Time.deltaTime * _speed);
         }
     }
 }
