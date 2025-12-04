@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using Unity.Mathematics;
 using UnityEngine;
@@ -5,35 +6,37 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour
 {
     private float horizontal;
-    private float speed = 8f;
+    private float speed = 9f;
     private float jumpingPower = 16f;
     private bool isFacingRight = true;
+    private bool isGrounded = false;
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
 
-    /*
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-    
-    } */
+        rb = GetComponent<Rigidbody2D>();
+    }
 
     // Update is called once per frame
     void Update()
     {
-        horizontal = Input.GetAxisRaw("Horizontal");
+        horizontal = Input.GetAxis("Horizontal");
+
         Flip();
+
+        if (Input.GetButtonDown("Jump") && !isGrounded)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocityX, jumpingPower);
+            isGrounded = false;
+        }
     }
     private void FixedUpdate()
     {
         rb.linearVelocity = new Vector2(horizontal * speed, rb.linearVelocityY);
-    }
-
-    private bool isGrounded()
-    {
-        return Physics2D.OverlapCircle(groundCheck, )
     }
     private void Flip()
     {
@@ -44,6 +47,10 @@ public class PlayerInput : MonoBehaviour
             localScale.x *= -1f;
             transform.localScale = localScale;
         }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        isGrounded = true;
     }
 }
 /*      float x = 0;
