@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlayerInputV2 : MonoBehaviour
 {
+    [SerializeField] private string _cointag = "Coin";
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -11,11 +13,14 @@ public class PlayerInputV2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position += (new Vector3(Input.GetAxis("Horizontal"), Input.get))
+     
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Destroy(collision.gameObject);
+        if (collision.gameObject.CompareTag(_cointag))
+        {
+            Destroy(collision.gameObject);
+        }
     }
 }
