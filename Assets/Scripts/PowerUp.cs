@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class CameraMovement : MonoBehaviour
+public class PowerUp : MonoBehaviour
 {
-    public GameObject target;
+    [SerializeField] private float _newSpeed;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -10,9 +10,14 @@ public class CameraMovement : MonoBehaviour
         
     }
 
+    public float GetSpeed()
+    {
+        return _newSpeed;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(target.transform.position.x, transform.position.y, -10);
+        
     }
 }

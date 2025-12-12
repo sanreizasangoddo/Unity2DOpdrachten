@@ -5,30 +5,30 @@ using UnityEngine;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
 public class PlayerInput : MonoBehaviour
 {
-    [SerializeField] private float speed = 8f;
-    [SerializeField] private float jumpingPower = 16f;
+    [SerializeField] private float _speed = 8f;
+    [SerializeField] private float _jumpingPower = 16f;
 
-    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private SpriteRenderer _spriteRenderer;
 
     private Vector2 movement;
 
     private Vector2 screenBounds;
 
-    private float playerHalfWidth;
+    private float _playerHalfWidth;
 
-    private float xPosLastFrame;
+    private float _xPosLastFrame;
 
-    [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private Animator animator;
+    [SerializeField] private Rigidbody2D _rb;
+    [SerializeField] private Transform _groundCheck;
+    [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] private Animator _animator;
 
     private void Start()
     {
         screenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
-        playerHalfWidth = spriteRenderer.bounds.extents.x;
+        _playerHalfWidth = _spriteRenderer.bounds.extents.x;
 
-        animator = GetComponent<Animator>();
+        _animator = GetComponent<Animator>();
     }
     void Update()
     {
@@ -40,19 +40,19 @@ public class PlayerInput : MonoBehaviour
     private void Flip()
     {
         float input = Input.GetAxisRaw("Horizontal");
-        if (input > 0 && (transform.position.x > xPosLastFrame))
+        if (input > 0 && (transform.position.x > _xPosLastFrame))
         {
-            spriteRenderer.flipX = false;
-        } else if (input < 0 && (transform.position.x < xPosLastFrame))
+            _spriteRenderer.flipX = false;
+        } else if (input < 0 && (transform.position.x < _xPosLastFrame))
         {
-            spriteRenderer.flipX = true;
+            _spriteRenderer.flipX = true;
         }
 
-        xPosLastFrame = transform.position.x;
+        _xPosLastFrame = transform.position.x;
     }
     private void ClampMovement()
     {
-        float clampedX = Mathf.Clamp(transform.position.x, -screenBounds.x + playerHalfWidth, screenBounds.x - playerHalfWidth);
+        float clampedX = Mathf.Clamp(transform.position.x, -screenBounds.x + _playerHalfWidth, screenBounds.x - _playerHalfWidth);
         Vector2 position = transform.position;
         position.x = clampedX;
         transform.position = position;
@@ -61,15 +61,15 @@ public class PlayerInput : MonoBehaviour
     private void HandleMovement()
     {
         float input = Input.GetAxisRaw("Horizontal");
-        movement.x = input * speed * Time.deltaTime;
+        movement.x = input * _speed * Time.deltaTime;
         transform.Translate(movement);
         
         if (input != 0)
         {
-            animator.SetBool("isRunning", true);
+            _animator.SetBool("isRunning", true);
         } else
         {
-            animator.SetBool("isRunning", false);
+            _animator.SetBool("isRunning", false);
         }
     }
 }
