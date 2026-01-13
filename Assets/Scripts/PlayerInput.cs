@@ -5,19 +5,14 @@ using UnityEngine;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
 public class PlayerInput : MonoBehaviour
 {
-    [SerializeField] private float _speed = 8f;
-    [SerializeField] private float _jumpingPower = 16f;
-
-    [SerializeField] private SpriteRenderer _spriteRenderer;
-
-    private Vector2 movement;
-
-    private Vector2 screenBounds;
-
-    private float _playerHalfWidth;
+    [SerializeField] private float _moveSpeed = 8f;
+    [SerializeField] private float _jumpForce = 16f;
 
     private float _xPosLastFrame;
+    private float _groundCheckRadius = 0.2f;
+    private bool _isGrounded;
 
+    [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private Rigidbody2D _rb;
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private LayerMask _groundLayer;
@@ -25,15 +20,21 @@ public class PlayerInput : MonoBehaviour
 
     private void Start()
     {
-        screenBounds = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
-        _playerHalfWidth = _spriteRenderer.bounds.extents.x;
-
+        _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
     void Update()
     {
-        HandleMovement();
-        ClampMovement();
+        float moveInput = Input.GetAxisRaw("Horizontal");
+        _rb.linearVelocity = new Vector2(moveInput * _moveSpeed, _rb.linearVelocityY);
+
+        if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
+        {
+            _rb.linearVelocity = new Vector2(_rb.linearVelocityX, _jumpForce);
+        }
+
+        SetAnimation(moveInput);
         Flip();
     }
 
@@ -50,26 +51,43 @@ public class PlayerInput : MonoBehaviour
 
         _xPosLastFrame = transform.position.x;
     }
-    private void ClampMovement()
+
+    private void FixedUpdate()
     {
-        float clampedX = Mathf.Clamp(transform.position.x, -screenBounds.x + _playerHalfWidth, screenBounds.x - _playerHalfWidth);
-        Vector2 position = transform.position;
-        position.x = clampedX;
-        transform.position = position;
+        _isGrounded = Physics2D.OverlapCircle(_groundCheck.position, _groundCheckRadius, _groundLayer);
     }
 
-    private void HandleMovement()
+    private void SetAnimation(float moveInput)
     {
-        float input = Input.GetAxisRaw("Horizontal");
-        movement.x = input * _speed * Time.deltaTime;
-        transform.Translate(movement);
-        
-        if (input != 0)
+        if (_isGrounded)
         {
-            _animator.SetBool("isRunning", true);
-        } else
+            if (moveInput != 0)
+            {
+                _animator.Play("Run");
+            }
+            else
+            {
+                _animator.Play("Idle");
+            }
+        }
+        else
         {
-            _animator.SetBool("isRunning", false);
+            if(_rb.linearVelocityY > 0)
+            {
+                _animator.Play("Jump");
+            }
+            else
+            {
+                _animator.Play("Fall");
+            }
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "Damage")
+        {
+
         }
     }
 }
