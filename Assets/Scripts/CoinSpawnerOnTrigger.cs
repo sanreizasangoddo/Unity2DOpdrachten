@@ -13,7 +13,6 @@ public class CoinSpawnerOnTrigger : MonoBehaviour
 
     private bool _hasSpawned = false;
 
-
     private void Update()
     {
         if (_hasSpawned)

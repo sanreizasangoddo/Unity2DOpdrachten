@@ -1,14 +1,15 @@
 using System;
-using System.Drawing;
-using Unity.Mathematics;
+using System.Collections;
 using UnityEngine;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
+using UnityEngine.UI;
+
 public class PlayerInput : MonoBehaviour
 {
-    [SerializeField] private float _moveSpeed = 8f;
+    [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private float _jumpForce = 16f;
+    [SerializeField] private int _maxHealth = 3;
+    private int _currentHealth;
 
-    private float _defaultSpeed;
     private float _xPosLastFrame;
     private float _groundCheckRadius = 0.2f;
     private bool _isGrounded;
@@ -19,13 +20,17 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private Animator _animator;
     [SerializeField] private AudioClip _jump;
+    [SerializeField] private AudioClip _takeDamage;
+    [SerializeField] private Image _healthImage1;
+    [SerializeField] private Image _healthImage2;
+    [SerializeField] private Image _healthImage3;
 
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _defaultSpeed = _moveSpeed;
+        _currentHealth = _maxHealth;
     }
     private void Update()
     {
@@ -40,6 +45,15 @@ public class PlayerInput : MonoBehaviour
 
         SetAnimation(moveInput);
         Flip();
+
+        if (_currentHealth == 2)
+        {
+            _healthImage3.fillAmount = 0f;
+        }
+        if (_currentHealth == 1)
+        {
+            _healthImage2.fillAmount = 0f;
+        }
     }
 
     private void Flip()
@@ -87,99 +101,32 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    public void SetSpeed(float newSpeed)
-    {
-        _moveSpeed = newSpeed;
-    }
-
-    public void ResetSpeed()
-    {
-        _moveSpeed = _defaultSpeed;
-    }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.tag == "Damage")
         {
+            _currentHealth -= 1;
+            _rb.linearVelocity = new Vector2(_rb.linearVelocityX, _jumpForce * 1.1f);
+            StartCoroutine(BlinkRed());
 
+            if (_currentHealth <= 0)
+            {
+                Death();
+                _healthImage1.fillAmount = 0f;
+            }
         }
+    }
+
+    private IEnumerator BlinkRed()
+    {
+        _spriteRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        _spriteRenderer.color = Color.white;
+        AudioSource.PlayClipAtPoint(_takeDamage, transform.position);
+    }
+
+    private void Death()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
     }
 }
-/*
-private float horizontal;
-    private float speed = 8f;
-    private float jumpingPower = 16f;
-    private bool isFacingRight = true;
-
-    [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private Animator animator;
-
-    private void Start()
-    {
-        animator = GetComponent<Animator>();
-    }
-
-    void Update()
-    {
-        horizontal = Input.GetAxisRaw("Horizontal");
-
-        animator.SetFloat("Speed", Mathf.Abs(horizontal));
-
-        animator.SetBool("isGrounded", IsGrounded());
-
-        if (Input.GetButtonDown("Jump") && IsGrounded())
-        {
-            animator.SetTrigger("Jump");
-        }
-
-        if (horizontal != 0)
-        {
-            animator.SetBool("isRunning", true);
-        }
-
-        if (Input.GetButtonDown("Jump"))
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocityX, jumpingPower);
-            animator.SetBool("isGrounded", false);
-        }
-        else
-        {
-            animator.SetBool("isGrounded", true);
-        }
-
-        if (Input.GetButtonUp("Jump") && rb.linearVelocityY > 0f)
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocityX, rb.linearVelocityY * 0.5f);
-        }
-
-        Flip();
-    }
-
-    private void FixedUpdate()
-    {
-        rb.linearVelocity = new Vector2(horizontal * speed, rb.linearVelocityY);
-    }
-
-    public void Jump()
-    {
-        rb.linearVelocity = new Vector2(rb.linearVelocityX, jumpingPower);
-    }
-
-    private bool IsGrounded()
-    {
-        return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
-    }
-
-    private void Flip()
-    {
-        if (isFacingRight && horizontal < 0f || !isFacingRight && horizontal > 0f)
-        {
-            isFacingRight = !isFacingRight;
-            Vector3 ls = transform.localScale;
-            ls.x *= -1f;
-            transform.localScale = ls;
-        }
-    }
-*/

@@ -3,27 +3,27 @@ using UnityEngine;
 
 public class PlayerCoinCollector : MonoBehaviour
 {
-    [SerializeField] private string coinTag = "Coin";
-    [SerializeField] private AudioClip coinPickup;
-    [SerializeField] private AudioClip rewardSound;
-    [SerializeField] private TMP_Text coinText;
+    [SerializeField] private string _coinTag = "Coin";
+    [SerializeField] private AudioClip _coinSound;
+    [SerializeField] private AudioClip _rewardSound;
+    [SerializeField] private TMP_Text _coinText;
 
-    private int coinCount = 0;
-    private int coinsNeeded = 5;
+    private int _coinCount = 0;
+    private int _coinsNeeded = 5;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag(coinTag))
+        if (collision.gameObject.CompareTag(_coinTag))
         {
             Destroy(collision.gameObject);
-            coinCount++;
+            _coinCount++;
 
-            coinText.text = coinCount.ToString();
-            AudioSource.PlayClipAtPoint(coinPickup, transform.position);
+            _coinText.text = "x" + _coinCount.ToString();
+            AudioSource.PlayClipAtPoint(_coinSound, transform.position);
 
-            if (coinCount == coinsNeeded)
+            if (_coinCount % _coinsNeeded == 0)
             {
-                AudioSource.PlayClipAtPoint(rewardSound, transform.position);
+                AudioSource.PlayClipAtPoint(_rewardSound, transform.position);
             }
         }
     }
