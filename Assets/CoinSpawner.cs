@@ -22,10 +22,4 @@ public class CoinSpawner : MonoBehaviour
             Instantiate(_bigCoinPrefab, location.position, location.rotation);
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }

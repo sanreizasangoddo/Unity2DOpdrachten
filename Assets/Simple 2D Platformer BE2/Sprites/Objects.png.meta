@@ -164,9 +164,9 @@ TextureImporter:
       name: Finish
       rect:
         serializedVersion: 2
-        x: 17
+        x: 18
         y: 0
-        width: 16
+        width: 14
         height: 16
       alignment: 0
       pivot: {x: 0.5, y: 0.5}

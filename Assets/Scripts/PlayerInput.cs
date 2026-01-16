@@ -8,6 +8,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private float _moveSpeed = 8f;
     [SerializeField] private float _jumpForce = 16f;
 
+    private float _defaultSpeed;
     private float _xPosLastFrame;
     private float _groundCheckRadius = 0.2f;
     private bool _isGrounded;
@@ -17,14 +18,16 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private Animator _animator;
+    [SerializeField] private AudioClip _jump;
 
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _defaultSpeed = _moveSpeed;
     }
-    void Update()
+    private void Update()
     {
         float moveInput = Input.GetAxisRaw("Horizontal");
         _rb.linearVelocity = new Vector2(moveInput * _moveSpeed, _rb.linearVelocityY);
@@ -32,6 +35,7 @@ public class PlayerInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
         {
             _rb.linearVelocity = new Vector2(_rb.linearVelocityX, _jumpForce);
+            AudioSource.PlayClipAtPoint(_jump, transform.position);
         }
 
         SetAnimation(moveInput);
@@ -81,6 +85,16 @@ public class PlayerInput : MonoBehaviour
                 _animator.Play("Fall");
             }
         }
+    }
+
+    public void SetSpeed(float newSpeed)
+    {
+        _moveSpeed = newSpeed;
+    }
+
+    public void ResetSpeed()
+    {
+        _moveSpeed = _defaultSpeed;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
