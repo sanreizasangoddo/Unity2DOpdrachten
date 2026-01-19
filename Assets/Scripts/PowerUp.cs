@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PowerUp : MonoBehaviour
 {
-    [SerializeField] private float _newSpeed = 8f;
+    [SerializeField] private float _newSpeed;
 
     public float GetSpeed()
     {

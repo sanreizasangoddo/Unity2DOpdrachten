@@ -15,12 +15,14 @@ public class PlayerInput : MonoBehaviour
     private bool _isGrounded;
 
     [SerializeField] private SpriteRenderer _spriteRenderer;
+    [SerializeField] private string _powerUp = "PowerUp";
     [SerializeField] private Rigidbody2D _rb;
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private Animator _animator;
     [SerializeField] private AudioClip _jump;
     [SerializeField] private AudioClip _takeDamage;
+    [SerializeField] private AudioClip _powerUpSound;
     [SerializeField] private Image _healthImage1;
     [SerializeField] private Image _healthImage2;
     [SerializeField] private Image _healthImage3;
@@ -54,6 +56,14 @@ public class PlayerInput : MonoBehaviour
         {
             _healthImage2.fillAmount = 0f;
         }
+
+        if (_moveSpeed == 2)
+        {
+            GetComponent<SpriteRenderer>().color = Color.cyan;
+        } else if (_moveSpeed == -5)
+        {
+            GetComponent<SpriteRenderer>().color = Color.green;
+        }
     }
 
     private void Flip()
@@ -62,7 +72,8 @@ public class PlayerInput : MonoBehaviour
         if (input > 0 && (transform.position.x > _xPosLastFrame))
         {
             _spriteRenderer.flipX = false;
-        } else if (input < 0 && (transform.position.x < _xPosLastFrame))
+        }
+        else if (input < 0 && (transform.position.x < _xPosLastFrame))
         {
             _spriteRenderer.flipX = true;
         }
@@ -90,7 +101,7 @@ public class PlayerInput : MonoBehaviour
         }
         else
         {
-            if(_rb.linearVelocityY > 0)
+            if (_rb.linearVelocityY > 0)
             {
                 _animator.Play("Jump");
             }
@@ -103,7 +114,7 @@ public class PlayerInput : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.tag == "Damage")
+        if (collision.gameObject.tag == "Damage")
         {
             _currentHealth -= 1;
             _rb.linearVelocity = new Vector2(_rb.linearVelocityX, _jumpForce * 1.1f);
@@ -114,6 +125,16 @@ public class PlayerInput : MonoBehaviour
                 Death();
                 _healthImage1.fillAmount = 0f;
             }
+        }
+
+        PowerUp powerUpValue;
+        if (collision.gameObject.CompareTag(_powerUp) && collision.gameObject.TryGetComponent<PowerUp>(out powerUpValue))
+        {
+            _moveSpeed = powerUpValue.GetSpeed();
+            Destroy(collision.gameObject);
+
+            AudioSource.PlayClipAtPoint(_powerUpSound, transform.position);
+            GetComponent<SpriteRenderer>().color = Color.yellow;
         }
     }
 
