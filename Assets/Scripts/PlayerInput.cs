@@ -5,10 +5,11 @@ using UnityEngine.UI;
 
 public class PlayerInput : MonoBehaviour
 {
-    [SerializeField] private float _moveSpeed = 5f;
+    [SerializeField] private float _moveSpeed;
     [SerializeField] private float _jumpForce = 16f;
     [SerializeField] private int _maxHealth = 3;
     private int _currentHealth;
+    private float _defaultSpeed = 5f;
 
     private float _xPosLastFrame;
     private float _groundCheckRadius = 0.2f;
@@ -16,6 +17,7 @@ public class PlayerInput : MonoBehaviour
 
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private string _powerUp = "PowerUp";
+    [SerializeField] private string _damage = "Damage";
     [SerializeField] private Rigidbody2D _rb;
     [SerializeField] private Transform _groundCheck;
     [SerializeField] private LayerMask _groundLayer;
@@ -47,15 +49,6 @@ public class PlayerInput : MonoBehaviour
 
         SetAnimation(moveInput);
         Flip();
-
-        if (_currentHealth == 2)
-        {
-            _healthImage3.fillAmount = 0f;
-        }
-        if (_currentHealth == 1)
-        {
-            _healthImage2.fillAmount = 0f;
-        }
 
         if (_moveSpeed == 2)
         {
@@ -114,12 +107,21 @@ public class PlayerInput : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Damage")
+        if (collision.gameObject.CompareTag(_damage)) 
         {
             _currentHealth -= 1;
             _rb.linearVelocity = new Vector2(_rb.linearVelocityX, _jumpForce * 1.1f);
+            _moveSpeed = _defaultSpeed;
             StartCoroutine(BlinkRed());
 
+            if (_currentHealth == 2)
+            {
+                _healthImage3.fillAmount = 0f;
+            }
+            if (_currentHealth == 1)
+            {
+                _healthImage2.fillAmount = 0f;
+            }
             if (_currentHealth <= 0)
             {
                 Death();

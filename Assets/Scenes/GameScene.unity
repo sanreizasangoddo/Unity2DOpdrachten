@@ -335,7 +335,6 @@ MonoBehaviour:
   _coinTag: Coin
   _coinSound: {fileID: 8300000, guid: 3dc6590be96a6f647ad44298ed3e6b10, type: 3}
   _coinText: {fileID: 1127544574}
-  _rb: {fileID: 129849175}
   _spriteRenderer: {fileID: 129849182}
 --- !u!50 &129849175 stripped
 Rigidbody2D:
@@ -403,8 +402,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0009583235, y: 0.034635186}
-  m_Size: {x: 0.9786272, y: 1.0895519}
+  m_Offset: {x: -0.0009583235, y: 0.039959252}
+  m_Size: {x: 0.9786272, y: 1.0789038}
   m_Direction: 0
 --- !u!114 &129849186
 MonoBehaviour:
@@ -1553,7 +1552,7 @@ Transform:
   m_GameObject: {fileID: 1262633257}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.6, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4356,6 +4355,10 @@ PrefabInstance:
       propertyPath: _healthImage3
       value: 
       objectReference: {fileID: 455046276}
+    - target: {fileID: 1478519805570893809, guid: 7a9331d8eaf4ae0409c346471c671274, type: 3}
+      propertyPath: _powerUpSound
+      value: 
+      objectReference: {fileID: 8300000, guid: d368110cce714ba4a8f9d77046652f40, type: 3}
     - target: {fileID: 1478519805570893809, guid: 7a9331d8eaf4ae0409c346471c671274, type: 3}
       propertyPath: spriteRenderer
       value: 
