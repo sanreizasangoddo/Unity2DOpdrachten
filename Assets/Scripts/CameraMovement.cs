@@ -11,5 +11,9 @@ public class CameraMovement : MonoBehaviour
         {
             transform.position = new Vector3(_target.transform.position.x, transform.position.y, -10);
         }
+        else if (_target != null && _target.transform.position.y >= 3)
+        {
+            transform.position = new Vector3(_target.transform.position.x, _target.transform.position.y, -10);
+        }
     }
 }

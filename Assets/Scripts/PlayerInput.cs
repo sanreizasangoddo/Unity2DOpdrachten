@@ -26,6 +26,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private AudioClip _jump;
     [SerializeField] private AudioClip _takeDamage;
     [SerializeField] private AudioClip _powerUpSound;
+    [SerializeField] private AudioClip _gameOverSound;
     [SerializeField] private Image _healthImage1;
     [SerializeField] private Image _healthImage2;
     [SerializeField] private Image _healthImage3;
@@ -160,5 +161,6 @@ public class PlayerInput : MonoBehaviour
     {
         _gameOverManager.GameOver();
         Destroy(gameObject);
+        AudioSource.PlayClipAtPoint(_gameOverSound, transform.position);
     }
 }
