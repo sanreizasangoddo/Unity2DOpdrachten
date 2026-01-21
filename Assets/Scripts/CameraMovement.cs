@@ -2,15 +2,14 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField] private GameObject _target;
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (_target != null)
+        {
+            transform.position = new Vector3(_target.transform.position.x, transform.position.y, -10);
+        }
     }
 }

@@ -10,6 +10,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private int _maxHealth = 3;
     private int _currentHealth;
     private float _defaultSpeed = 5f;
+    private float _deathHeight = -10f;
 
     private float _xPosLastFrame;
     private float _groundCheckRadius = 0.2f;
@@ -28,6 +29,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private Image _healthImage1;
     [SerializeField] private Image _healthImage2;
     [SerializeField] private Image _healthImage3;
+    [SerializeField] private GameOverManager _gameOverManager;
 
     private void Start()
     {
@@ -56,6 +58,11 @@ public class PlayerInput : MonoBehaviour
         } else if (_moveSpeed == -5)
         {
             GetComponent<SpriteRenderer>().color = Color.green;
+        }
+
+        if (transform.position.y < _deathHeight)
+        {
+            Death();
         }
     }
 
@@ -130,7 +137,8 @@ public class PlayerInput : MonoBehaviour
         }
 
         PowerUp powerUpValue;
-        if (collision.gameObject.CompareTag(_powerUp) && collision.gameObject.TryGetComponent<PowerUp>(out powerUpValue))
+        if (collision.gameObject.CompareTag(_powerUp) &&
+            collision.gameObject.TryGetComponent<PowerUp>(out powerUpValue))
         {
             _moveSpeed = powerUpValue.GetSpeed();
             Destroy(collision.gameObject);
@@ -143,13 +151,14 @@ public class PlayerInput : MonoBehaviour
     private IEnumerator BlinkRed()
     {
         _spriteRenderer.color = Color.red;
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.15f);
         _spriteRenderer.color = Color.white;
         AudioSource.PlayClipAtPoint(_takeDamage, transform.position);
     }
 
     private void Death()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
+        _gameOverManager.GameOver();
+        Destroy(gameObject);
     }
 }
