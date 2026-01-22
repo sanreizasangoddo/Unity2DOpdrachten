@@ -8,7 +8,6 @@ TagManager:
   - CoinSpawner
   - PowerUp
   - Damage
-  - Death
   layers:
   - Default
   - TransparentFX

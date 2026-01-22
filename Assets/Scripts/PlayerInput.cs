@@ -11,6 +11,8 @@ public class PlayerInput : MonoBehaviour
     private int _currentHealth;
     private float _defaultSpeed = 5f;
     private float _deathHeight = -10f;
+    private int _extraJumpsValue = 0;
+    private int _extraJumps;
 
     private float _xPosLastFrame;
     private float _groundCheckRadius = 0.2f;
@@ -38,16 +40,31 @@ public class PlayerInput : MonoBehaviour
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _currentHealth = _maxHealth;
+        _extraJumps = _extraJumpsValue;
     }
     private void Update()
     {
         float moveInput = Input.GetAxisRaw("Horizontal");
         _rb.linearVelocity = new Vector2(moveInput * _moveSpeed, _rb.linearVelocityY);
 
-        if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
+        if (_isGrounded)
         {
+            _extraJumps = _extraJumpsValue;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (_isGrounded)
+            {
             _rb.linearVelocity = new Vector2(_rb.linearVelocityX, _jumpForce);
             AudioSource.PlayClipAtPoint(_jump, transform.position);
+            }
+            else if (_extraJumps > 0)
+            {
+                _rb.linearVelocity = new Vector2(_rb.linearVelocityX, _jumpForce);
+                _extraJumps--;
+                AudioSource.PlayClipAtPoint(_jump, transform.position);
+            }
         }
 
         SetAnimation(moveInput);
@@ -162,5 +179,15 @@ public class PlayerInput : MonoBehaviour
         _gameOverManager.GameOver();
         Destroy(gameObject);
         AudioSource.PlayClipAtPoint(_gameOverSound, transform.position);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag(_powerUp))
+        {
+            _extraJumpsValue = 1;
+            Destroy(collision.gameObject);
+            AudioSource.PlayClipAtPoint(_powerUpSound, transform.position);
+        }
     }
 }

@@ -2,18 +2,17 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    [SerializeField] private GameObject _target;
+    [SerializeField] private Transform _target;
+    [SerializeField] private Vector3 _offset;
+    private float _cameraSpeed = 4f;
 
     // Update is called once per frame
     void Update()
     {
         if (_target != null)
         {
-            transform.position = new Vector3(_target.transform.position.x, transform.position.y, -10);
-        }
-        else if (_target != null && _target.transform.position.y >= 3)
-        {
-            transform.position = new Vector3(_target.transform.position.x, _target.transform.position.y, -10);
+            Vector3 desiredPos = _target.position + _offset;
+            transform.position = Vector3.Lerp(transform.position, desiredPos, _cameraSpeed * Time.deltaTime);
         }
     }
 }

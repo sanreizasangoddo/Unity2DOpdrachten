@@ -7,6 +7,7 @@ public class PlatformSpawner : MonoBehaviour
     [SerializeField] private string _playerTag = "Player";
     [SerializeField] private GameObject _groundPrefab;
     [SerializeField] private List<Transform> _groundSpawnLocations = new List<Transform>();
+    [SerializeField] private AudioClip _spawningPlatformSound;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -17,6 +18,8 @@ public class PlatformSpawner : MonoBehaviour
             {
                 Instantiate(_groundPrefab, location.position, location.rotation);
             }
+
+            AudioSource.PlayClipAtPoint(_spawningPlatformSound, transform.position);
         }
     }
 }
