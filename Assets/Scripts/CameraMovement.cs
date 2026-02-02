@@ -4,7 +4,7 @@ public class CameraMovement : MonoBehaviour
 {
     [SerializeField] private Transform _target;
     [SerializeField] private Vector3 _offset;
-    private float _cameraSpeed = 5f;
+    private float _cameraSpeed = 10f;
 
     // Update is called once per frame
     void Update()

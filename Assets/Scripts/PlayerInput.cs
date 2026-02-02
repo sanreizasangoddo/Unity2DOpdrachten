@@ -176,6 +176,9 @@ public class PlayerInput : MonoBehaviour
 
     private void Death()
     {
+        _healthImage3.fillAmount = 0f;
+        _healthImage2.fillAmount = 0f;
+        _healthImage1.fillAmount = 0f;
         _gameOverManager.GameOver();
         Destroy(gameObject);
         AudioSource.PlayClipAtPoint(_gameOverSound, transform.position);
